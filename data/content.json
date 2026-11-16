@@ -168,7 +168,7 @@
   ],
   "examenes": [
     {"id":"cv-2023-jun","comunidadId":"cv","comunidad":"Comunitat Valenciana","convocatoria":"Junio","anio":2023,"fase":"Ordinaria","url":"https://docs.google.com/document/d/1XfevyBpl3kXd2Qdwkd6bsBeYuBVcWW61/export?format=pdf","fuente":"Resuelto por el profesor Rafael Núñez Nogales"},
-    {"id":"cv-2024-jul","comunidadId":"cv","comunidad":"Comunitat Valenciana","convocatoria":"Julio","anio":2024,"fase":"Extraordinaria","url":"https://blogsaverroes.juntadeandalucia.es/rafaelnunezmat/files/2024/09/2024-extraordin-PAU-COMUNIDAD-VALENCIANA-mat-II.pdf","fuente":"Resuelto por el profesor Rafael Núñez Nogales"},
+    {"id":"cv-2024-jul","comunidadId":"cv","comunidad":"Comunitat Valenciana","convocatoria":"Julio","anio":2024,"fase":"Extraordinaria","url":"https://yoquieroaprobar.es/_pdf/16568.pdf","fuente":"Resuelto por Juan Antonio Martínez García (ebaumatematicas.com)"},
     {"id":"cv-2025-jun","comunidadId":"cv","comunidad":"Comunitat Valenciana","convocatoria":"Junio","anio":2025,"fase":"Ordinaria","url":"https://docs.google.com/document/d/1Of78L9nqkD02UZo9PyfJCPILkwCWaUM5/export?format=pdf","fuente":"Resuelto por el profesor Rafael Núñez Nogales"},
     {"id":"cv-2025-modelo","comunidadId":"cv","comunidad":"Comunitat Valenciana","convocatoria":"Modelo oficial","anio":2025,"fase":"Modelo","url":"https://www.ebaumatematicas.com/wp-content/uploads/2024/10/2oBachCC_PAU_Valencia_2025-Modelo_Resuelto_JuanAntonioMG.pdf","fuente":"Resuelto por Juan Antonio Martínez García (ebaumatematicas.com)"}
   ]

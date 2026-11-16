@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { memo, useState } from 'react';
 import MathJaxTypeset from '@/components/MathJaxTypeset';
 import ExerciseCard from '@/components/ExerciseCard';
+import Countdown from '@/components/Countdown';
 
 const DURACION_MIN = 20; // minutos, ajustable por el usuario abajo
 
@@ -21,54 +22,55 @@ function pickOnePerBloque(ejercicios) {
   return elegidos;
 }
 
-function formatTime(totalSeconds) {
-  const m = Math.floor(totalSeconds / 60)
-    .toString()
-    .padStart(2, '0');
-  const s = Math.floor(totalSeconds % 60)
-    .toString()
-    .padStart(2, '0');
-  return `${m}:${s}`;
-}
+// Memoizado: solo vuelve a renderizarse si cambia `seleccion` (la lista de
+// ejercicios), nunca por culpa del cronómetro. Esto es lo que evita que
+// MathJax pierda su renderizado cada segundo.
+const ListaEnunciados = memo(function ListaEnunciados({ seleccion }) {
+  return (
+    <>
+      {seleccion.map((ex, i) => (
+        <div className="card" key={ex.id}>
+          <div className="tags">
+            <span className="tag subtema">{ex.subtema}</span>
+          </div>
+          <p>
+            <strong>{i + 1}.</strong>{' '}
+            <span dangerouslySetInnerHTML={{ __html: ex.enunciado }} />
+          </p>
+        </div>
+      ))}
+      <MathJaxTypeset deps={[seleccion]} />
+    </>
+  );
+});
+
+const ListaSoluciones = memo(function ListaSoluciones({ seleccion }) {
+  return (
+    <>
+      {seleccion.map((ex, i) => (
+        <ExerciseCard ex={ex} index={i} key={ex.id} />
+      ))}
+      <MathJaxTypeset deps={[seleccion]} />
+    </>
+  );
+});
 
 export default function SimulacroView({ ejercicios }) {
   const [estado, setEstado] = useState('inicio'); // inicio | corriendo | terminado
   const [minutos, setMinutos] = useState(DURACION_MIN);
-  const [segundosRestantes, setSegundosRestantes] = useState(DURACION_MIN * 60);
   const [seleccion, setSeleccion] = useState([]);
-  const intervalRef = useRef(null);
-
-  useEffect(() => {
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, []);
 
   function iniciar() {
     const elegidos = pickOnePerBloque(ejercicios);
     setSeleccion(elegidos);
-    setSegundosRestantes(minutos * 60);
     setEstado('corriendo');
-
-    intervalRef.current = setInterval(() => {
-      setSegundosRestantes((prev) => {
-        if (prev <= 1) {
-          clearInterval(intervalRef.current);
-          setEstado('terminado');
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
   }
 
   function terminarAhora() {
-    if (intervalRef.current) clearInterval(intervalRef.current);
     setEstado('terminado');
   }
 
   function reiniciar() {
-    if (intervalRef.current) clearInterval(intervalRef.current);
     setEstado('inicio');
     setSeleccion([]);
   }
@@ -120,25 +122,13 @@ export default function SimulacroView({ ejercicios }) {
             gap: 12,
           }}
         >
-          <span className="timer">⏱ {formatTime(segundosRestantes)}</span>
+          <Countdown totalSeconds={minutos * 60} onFinish={terminarAhora} />
           <button className="btn secondary" onClick={terminarAhora}>
             Terminar y ver soluciones
           </button>
         </div>
 
-        {seleccion.map((ex, i) => (
-          <div className="card" key={ex.id}>
-            <div className="tags">
-              <span className="tag subtema">{ex.subtema}</span>
-            </div>
-            <p>
-              <strong>{i + 1}.</strong>{' '}
-              <span dangerouslySetInnerHTML={{ __html: ex.enunciado }} />
-            </p>
-          </div>
-        ))}
-
-        <MathJaxTypeset deps={[seleccion]} />
+        <ListaEnunciados seleccion={seleccion} />
       </>
     );
   }
@@ -164,11 +154,7 @@ export default function SimulacroView({ ejercicios }) {
         </button>
       </div>
 
-      {seleccion.map((ex, i) => (
-        <ExerciseCard ex={ex} index={i} key={ex.id} />
-      ))}
-
-      <MathJaxTypeset deps={[seleccion]} />
+      <ListaSoluciones seleccion={seleccion} />
     </>
   );
 }
